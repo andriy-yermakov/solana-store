@@ -16,6 +16,9 @@ pub enum StoreError {
     /// Data type mismatch
     #[error("Data type mismatch")]
     DataTypeMismatch,
+    /// Store not activated or deactivated
+    #[error("Store not activated or deactivated")]
+    StoreNotActive,
 }
 
 impl PrintProgramError for StoreError {

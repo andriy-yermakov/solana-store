@@ -55,6 +55,16 @@ pub fn create_or_allocate_account_raw<'a>(
     Ok(())
 }
 
+// #[inline(always)]
+// pub fn delete_account_raw<'a>(
+//     program_id: Pubkey,
+//     account_info: &'a AccountInfo<'a>,
+//     system_program_info: &'a AccountInfo<'a>,
+//     signer_seeds: &[&[u8]],
+// ) -> Result<(), ProgramError> {
+//     Ok(())
+// }
+
 pub fn assert_derivation(
     program_id: &Pubkey,
     account: &AccountInfo,

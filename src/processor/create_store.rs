@@ -8,6 +8,7 @@ use {
     solana_program::{
         account_info::{next_account_info, AccountInfo},
         entrypoint::ProgramResult,
+        program_error::ProgramError,
         pubkey::Pubkey,
     },
 };
@@ -15,12 +16,20 @@ use {
 pub fn create_store_logic<'a>(
     program_id: &Pubkey,
     _store_program_info: &AccountInfo<'a>,
-    rent_info: &'a AccountInfo<'a>,
-    system_info: &'a AccountInfo<'a>,
-    store_info: &'a AccountInfo<'a>,
-    admin_wallet_info: &'a AccountInfo<'a>,
-    payer_info: &'a AccountInfo<'a>,
+    rent_info: &AccountInfo<'a>,
+    system_info: &AccountInfo<'a>,
+    store_info: &AccountInfo<'a>,
+    admin_wallet_info: &AccountInfo<'a>,
+    payer_info: &AccountInfo<'a>,
 ) -> ProgramResult {
+    if !admin_wallet_info.is_signer {
+        return Err(ProgramError::MissingRequiredSignature);
+    }
+
+    if !payer_info.is_signer {
+        return Err(ProgramError::MissingRequiredSignature);
+    }
+
     let store_bump = assert_derivation(
         program_id,
         store_info,
@@ -55,10 +64,7 @@ pub fn create_store_logic<'a>(
     Ok(())
 }
 
-pub fn process_create_store<'a>(
-    program_id: &Pubkey,
-    accounts: &'a [AccountInfo<'a>],
-) -> ProgramResult {
+pub fn process_create_store(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
     let account_info_iter = &mut accounts.iter();
 
     let store_info = next_account_info(account_info_iter)?;

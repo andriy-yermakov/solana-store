@@ -1,5 +1,4 @@
 use {
-    crate::id,
     borsh::{BorshDeserialize, BorshSerialize},
     solana_program::{
         instruction::{AccountMeta, Instruction},
@@ -19,9 +18,8 @@ pub enum StoreInstructions {
     /// 0. `[writable]` The store pda key
     /// 1. `[signer]` The admin wallet
     /// 2. `[signer]` Payer
-    /// 3. `[]` The store program
-    /// 4. `[]` System
-    /// 5. `[]` Rent sysvar
+    /// 3. `[]` System
+    /// 4. `[]` Rent sysvar
     CreateStore,
 
     /// Update store information
@@ -40,9 +38,6 @@ pub enum StoreInstructions {
     ///
     /// 0. `[writable]` The store key
     /// 1. `[signer]` The admin wallet
-    /// 2. `[signer]` Payer
-    /// 3. `[]` The store program
-    /// 4. `[]` System
     DeleteStore,
 }
 
@@ -56,7 +51,6 @@ pub fn create_create_store_instruction(
         AccountMeta::new(store, false),
         AccountMeta::new_readonly(admin, true),
         AccountMeta::new_readonly(payer, true),
-        AccountMeta::new_readonly(id(), false),
         AccountMeta::new_readonly(system_program::id(), false),
         AccountMeta::new_readonly(rent::id(), false),
     ];
@@ -71,14 +65,10 @@ pub fn create_delete_store_instruction(
     program_id: Pubkey,
     store: Pubkey,
     admin: Pubkey,
-    payer: Pubkey,
 ) -> Instruction {
     let accounts = vec![
         AccountMeta::new(store, false),
         AccountMeta::new_readonly(admin, true),
-        AccountMeta::new_readonly(payer, true),
-        AccountMeta::new_readonly(id(), false),
-        AccountMeta::new_readonly(system_program::id(), false),
     ];
     Instruction {
         program_id,

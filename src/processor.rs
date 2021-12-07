@@ -23,7 +23,7 @@ pub fn process_instruction(
         }
         StoreInstructions::DeleteStore => {
             msg!("Instruction: Delete Store");
-            process_delete_store(program_id, accounts)
+            process_delete_store(accounts)
         }
     }
 }

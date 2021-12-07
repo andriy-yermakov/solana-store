@@ -52,18 +52,9 @@ pub fn create_or_allocate_account_raw<'a>(
         accounts,
         &[&signer_seeds],
     )?;
+
     Ok(())
 }
-
-// #[inline(always)]
-// pub fn delete_account_raw<'a>(
-//     program_id: Pubkey,
-//     account_info: &'a AccountInfo<'a>,
-//     system_program_info: &'a AccountInfo<'a>,
-//     signer_seeds: &[&[u8]],
-// ) -> Result<(), ProgramError> {
-//     Ok(())
-// }
 
 pub fn assert_derivation(
     program_id: &Pubkey,
@@ -74,6 +65,7 @@ pub fn assert_derivation(
     if key != *account.key {
         return Err(StoreError::DerivedKeyInvalid.into());
     }
+
     Ok(bump)
 }
 
@@ -88,5 +80,6 @@ pub fn try_from_slice_checked<T: BorshDeserialize>(
     }
 
     let result: T = try_from_slice_unchecked(data)?;
+
     Ok(result)
 }

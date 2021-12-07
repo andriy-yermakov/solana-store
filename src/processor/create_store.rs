@@ -15,7 +15,6 @@ use {
 
 pub fn create_store_logic<'a>(
     program_id: &Pubkey,
-    _store_program_info: &AccountInfo<'a>,
     rent_info: &AccountInfo<'a>,
     system_info: &AccountInfo<'a>,
     store_info: &AccountInfo<'a>,
@@ -39,6 +38,7 @@ pub fn create_store_logic<'a>(
             admin_wallet_info.key.as_ref(),
         ],
     )?;
+
     if store_info.data_is_empty() {
         create_or_allocate_account_raw(
             *program_id,
@@ -57,10 +57,12 @@ pub fn create_store_logic<'a>(
     }
 
     let mut store = Store::from_account_info(store_info)?;
+
     store.key = Key::Store;
     store.active = true;
     store.admin_wallet = *admin_wallet_info.key;
     store.serialize(&mut *store_info.data.borrow_mut())?;
+
     Ok(())
 }
 
@@ -70,18 +72,17 @@ pub fn process_create_store(program_id: &Pubkey, accounts: &[AccountInfo]) -> Pr
     let store_info = next_account_info(account_info_iter)?;
     let admin_wallet_info = next_account_info(account_info_iter)?;
     let payer_info = next_account_info(account_info_iter)?;
-    let store_program_info = next_account_info(account_info_iter)?;
     let system_info = next_account_info(account_info_iter)?;
     let rent_info = next_account_info(account_info_iter)?;
 
     create_store_logic(
         program_id,
-        store_program_info,
         rent_info,
         system_info,
         store_info,
         admin_wallet_info,
         payer_info,
     )?;
+
     Ok(())
 }
